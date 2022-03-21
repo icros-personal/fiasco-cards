@@ -1,9 +1,9 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
-module.exports = {
-  mode: 'development',
-  devtool: 'inline-source-map',
+module.exports = (env, argv) => ({
+  mode: argv.mode === 'production' ? 'production' : 'development',
+  devtool: argv.mode === 'production' ? undefined : 'inline-source-map',
   devServer: {
     allowedHosts: 'all',
     static: './dist',
@@ -30,4 +30,4 @@ module.exports = {
     filename: 'main.js',
     path: path.resolve(__dirname, 'dist'),
   },
-};
+});
