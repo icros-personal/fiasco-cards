@@ -2,6 +2,11 @@ import React, { useRef } from 'react';
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
 
+import { FileInput } from './FileInput';
+
+export const CARD_WIDTH = 512;
+export const CARD_HEIGHT = 375;
+
 export default function Controls({ creator }) {
   const lastCategoryFontRef = useRef(null);
   const lastTitleFontRef = useRef(null);
@@ -9,6 +14,10 @@ export default function Controls({ creator }) {
 
   const onBackgroundChange = async (e) => {
     try {
+      if (e.target.files.length !== 1) {
+        alert('Please provide a single file!');
+        return;
+      }
       const file = e.target.files[0];
       const background = await createImageBitmap(file);
       creator.setBackground(background);
@@ -16,6 +25,10 @@ export default function Controls({ creator }) {
       console.error(e);
     }
   };
+
+  const onMarginChange = (e) => {
+    creator.setMargin(Number(e.target.value));
+  }
 
   const onCategoryXChange = (e) => {
     creator.setCategoryX(Number(e.target.value));
@@ -31,6 +44,10 @@ export default function Controls({ creator }) {
 
   const onCategoryFontChange = async (e) => {
     try {
+      if (e.target.files.length !== 1) {
+        alert('Please provide a single file!');
+        return;
+      }
       const file = e.target.files[0];
       if (lastCategoryFontRef.current) {
         URL.revokeObjectURL(lastCategoryFontRef.current);
@@ -70,6 +87,10 @@ export default function Controls({ creator }) {
 
   const onTitleFontChange = async (e) => {
     try {
+      if (e.target.files.length !== 1) {
+        alert('Please provide a single file!');
+        return;
+      }
       const file = e.target.files[0];
       if (lastTitleFontRef.current) {
         URL.revokeObjectURL(lastTitleFontRef.current);
@@ -109,6 +130,10 @@ export default function Controls({ creator }) {
 
   const onDetailFontChange = async (e) => {
     try {
+      if (e.target.files.length !== 1) {
+        alert('Please provide a single file!');
+        return;
+      }
       const file = e.target.files[0];
       if (lastDetailFontRef.current) {
         URL.revokeObjectURL(lastDetailFontRef.current);
@@ -134,6 +159,21 @@ export default function Controls({ creator }) {
     }
   }
 
+  const onLoadFile = async (e) => {
+    try {
+      if (e.target.files.length !== 1) {
+        alert('Please provide a single file!');
+        return;
+      }
+      const file = e.target.files[0];
+      const text = await file.text();
+      const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+      creator.loadLines(lines);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   const onGenerate = async () => {
     const cardBytes = await creator.toPNGArray();
     const zip = new JSZip();
@@ -146,9 +186,15 @@ export default function Controls({ creator }) {
 
   return (
     <div style={{ position: 'fixed', right: 0, top: 0, width: '30vw', height: '100vh' }}>
+      <span>Card size: {CARD_WIDTH} x {CARD_HEIGHT}</span><br />
       <label>
         <span>Background </span>
-        <input type="file" onInput={onBackgroundChange} />
+        <input type="file" accept=".png,.jpg,.jpeg" onInput={onBackgroundChange} />
+      </label>
+      <br />
+      <label>
+        <span>Margin </span>
+        <input type="number" defaultValue={0} onChange={onMarginChange} />
       </label>
       <hr />
       <div>
@@ -159,8 +205,9 @@ export default function Controls({ creator }) {
       <div>
         <span>Category Font</span><br />
         <input type="number" defaultValue={parseInt(creator.categoryStyle.fontSize)} onChange={onCategoryFontSizeChange} />
-        <input type="file" onInput={onCategoryFontChange} />
+        <input type="file" accept=".ttf,.otf,.woff,.woff2,.eot" onInput={onCategoryFontChange} />
       </div>
+      <hr />
       <div>
         <span>Title Position</span><br />
         <input type="number" defaultValue={creator.titleStyle.x} onChange={onTitleXChange} />
@@ -169,8 +216,9 @@ export default function Controls({ creator }) {
       <div>
         <span>Title Font</span><br />
         <input type="number" defaultValue={parseInt(creator.titleStyle.fontSize)} onChange={onTitleFontSizeChange} />
-        <input type="file" onInput={onTitleFontChange} />
+        <input type="file" accept=".ttf,.otf,.woff,.woff2,.eot" onInput={onTitleFontChange} />
       </div>
+      <hr />
       <div>
         <span>Detail Position</span><br />
         <input type="number" defaultValue={creator.detailStyle.x} onChange={onDetailXChange} />
@@ -179,10 +227,11 @@ export default function Controls({ creator }) {
       <div>
         <span>Detail Font</span><br />
         <input type="number" defaultValue={parseInt(creator.detailStyle.fontSize)} onChange={onDetailFontSizeChange} />
-        <input type="file" onInput={onDetailFontChange} />
+        <input type="file" accept=".ttf,.otf,.woff,.woff2,.eot" onInput={onDetailFontChange} />
       </div>
       <hr />
-      <button onClick={onGenerate}>Generate</button>
+      <FileInput accept=".txt" onInput={onLoadFile}>Load text</FileInput>
+      <button onClick={onGenerate}>Save Images</button>
     </div>
   )
 }
