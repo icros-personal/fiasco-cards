@@ -38,7 +38,7 @@ class FontManager {
         newText += `
           @font-face {
             font-family: ${font.family};
-            src: url('${font.files.regular}');
+            src: url('${font.files.regular.replace('http:', 'https:')}');
           }
         `;
       }
@@ -106,7 +106,7 @@ export default function FontPicker({ onSelectFont }) {
                     }
                     const chosen = FontManager.fontList[index - 1];
                     setLabel(chosen.family);
-                    onSelectFont(chosen.files.regular);
+                    onSelectFont(chosen.files.regular.replace('http:', 'https:'));
                   }
                   setExpanded(false);
                 }} style={style}>{index > 0 ? FontManager.fontList[index - 1].family : 'Custom'}</MountingFontRow>
