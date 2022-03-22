@@ -195,6 +195,7 @@ class MasterCreator {
       x: 147,
       y: 263,
     };
+    this.margin = 10;
     this.cards = [];
     for (let i = 0; i < 19; i++) {
       this.cards.push(new CardCreator(this, 'Relationship'));
@@ -210,16 +211,35 @@ class MasterCreator {
     }
   }
 
+  getLines() {
+    let lines = '';
+    let category = this.cards[0].category;
+    this.cards.forEach((card) => {
+      if (card.category !== category) {
+        lines += '\n';
+        category = card.category;
+      }
+      if (card.title) {
+        lines += `${card.title}, ${card.detail}\n`;
+      } else {
+        lines += `${card.detail}\n`;
+      }
+    });
+    return lines;
+  }
+
   loadLines(lines) {
     let i = 0;
     lines.forEach((line) => {
-      if (i < 19) {
+      if (line) {
         const titleLength = line.indexOf(', ');
-        this.cards[i].setTitle(line.substring(0, titleLength));
-        this.cards[i].setDetail(line.substring(titleLength + 2));
-      } else if (line) {
-        this.cards[i].setTitle('');
-        this.cards[i].setDetail(line);
+        if (titleLength === -1) {
+          this.cards[i].setTitle('');
+          this.cards[i].setDetail(line);
+        } else {
+          this.cards[i].setTitle(line.substring(0, titleLength));
+          this.cards[i].setDetail(line.substring(titleLength + 2));
+        }
       } else {
         i--;
       }

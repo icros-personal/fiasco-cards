@@ -145,6 +145,12 @@ export default function Controls({ creator }) {
     }
   }
 
+  const onSaveText = () => {
+    const cardText = creator.getLines();
+    const content = new Blob([cardText], {type: 'text/plain;charset=utf-8'});
+    saveAs(content, 'fiasco-cards.txt');
+  }
+
   const onGenerate = async () => {
     const cardBytes = await creator.toPNGArray();
     const zip = new JSZip();
@@ -165,7 +171,7 @@ export default function Controls({ creator }) {
       <br />
       <label>
         <span>Margin: </span>
-        <input type="number" defaultValue={0} onChange={onMarginChange} />
+        <input type="number" defaultValue={creator.margin} onChange={onMarginChange} />
       </label>
       <hr />
       <div>
@@ -202,6 +208,8 @@ export default function Controls({ creator }) {
       </div>
       <hr />
       <FileInput accept=".txt" onInput={onLoadFile}>Load text</FileInput>
+      <button onClick={onSaveText}>Save text</button>
+      <br />
       <button onClick={onGenerate}>Save Images</button>
     </div>
   )
