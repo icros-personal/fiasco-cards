@@ -2,7 +2,8 @@ import React, { useRef } from 'react';
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
 
-import { FileInput } from './FileInput';
+import FileInput from './FileInput';
+import FontPicker from './FontPicker';
 
 export const CARD_WIDTH = 512;
 export const CARD_HEIGHT = 375;
@@ -42,18 +43,8 @@ export default function Controls({ creator }) {
     creator.setCategoryFontSize(`${Number(e.target.value)}px`);
   }
 
-  const onCategoryFontChange = async (e) => {
+  const onCategoryFontChange = async (fontUrl) => {
     try {
-      if (e.target.files.length !== 1) {
-        alert('Please provide a single file!');
-        return;
-      }
-      const file = e.target.files[0];
-      if (lastCategoryFontRef.current) {
-        URL.revokeObjectURL(lastCategoryFontRef.current);
-      }
-      const fontUrl = URL.createObjectURL(file);
-      lastCategoryFontRef.current = fontUrl;
       const existingFont = document.getElementById('category-font');
       if (existingFont) {
         existingFont.remove();
@@ -85,18 +76,8 @@ export default function Controls({ creator }) {
     creator.setTitleFontSize(`${Number(e.target.value)}px`);
   }
 
-  const onTitleFontChange = async (e) => {
+  const onTitleFontChange = async (fontUrl) => {
     try {
-      if (e.target.files.length !== 1) {
-        alert('Please provide a single file!');
-        return;
-      }
-      const file = e.target.files[0];
-      if (lastTitleFontRef.current) {
-        URL.revokeObjectURL(lastTitleFontRef.current);
-      }
-      const fontUrl = URL.createObjectURL(file);
-      lastTitleFontRef.current = fontUrl;
       const existingFont = document.getElementById('title-font');
       if (existingFont) {
         existingFont.remove();
@@ -128,18 +109,8 @@ export default function Controls({ creator }) {
     creator.setDetailFontSize(`${Number(e.target.value)}px`);
   }
 
-  const onDetailFontChange = async (e) => {
+  const onDetailFontChange = async (fontUrl) => {
     try {
-      if (e.target.files.length !== 1) {
-        alert('Please provide a single file!');
-        return;
-      }
-      const file = e.target.files[0];
-      if (lastDetailFontRef.current) {
-        URL.revokeObjectURL(lastDetailFontRef.current);
-      }
-      const fontUrl = URL.createObjectURL(file);
-      lastDetailFontRef.current = fontUrl;
       const existingFont = document.getElementById('detail-font');
       if (existingFont) {
         existingFont.remove();
@@ -188,12 +159,12 @@ export default function Controls({ creator }) {
     <div style={{ position: 'fixed', right: 0, top: 0, width: '30vw', height: '100vh' }}>
       <span>Card size: {CARD_WIDTH} x {CARD_HEIGHT}</span><br />
       <label>
-        <span>Background </span>
-        <input type="file" accept=".png,.jpg,.jpeg" onInput={onBackgroundChange} />
+        <span>Background: </span>
+        <FileInput accept=".png,.jpg,.jpeg" onInput={onBackgroundChange}>Select image</FileInput>
       </label>
       <br />
       <label>
-        <span>Margin </span>
+        <span>Margin: </span>
         <input type="number" defaultValue={0} onChange={onMarginChange} />
       </label>
       <hr />
@@ -205,7 +176,7 @@ export default function Controls({ creator }) {
       <div>
         <span>Category Font</span><br />
         <input type="number" defaultValue={parseInt(creator.categoryStyle.fontSize)} onChange={onCategoryFontSizeChange} />
-        <input type="file" accept=".ttf,.otf,.woff,.woff2,.eot" onInput={onCategoryFontChange} />
+        <FontPicker onSelectFont={onCategoryFontChange}/>
       </div>
       <hr />
       <div>
@@ -216,7 +187,7 @@ export default function Controls({ creator }) {
       <div>
         <span>Title Font</span><br />
         <input type="number" defaultValue={parseInt(creator.titleStyle.fontSize)} onChange={onTitleFontSizeChange} />
-        <input type="file" accept=".ttf,.otf,.woff,.woff2,.eot" onInput={onTitleFontChange} />
+        <FontPicker onSelectFont={onTitleFontChange}/>
       </div>
       <hr />
       <div>
@@ -227,7 +198,7 @@ export default function Controls({ creator }) {
       <div>
         <span>Detail Font</span><br />
         <input type="number" defaultValue={parseInt(creator.detailStyle.fontSize)} onChange={onDetailFontSizeChange} />
-        <input type="file" accept=".ttf,.otf,.woff,.woff2,.eot" onInput={onDetailFontChange} />
+        <FontPicker onSelectFont={onDetailFontChange}/>
       </div>
       <hr />
       <FileInput accept=".txt" onInput={onLoadFile}>Load text</FileInput>

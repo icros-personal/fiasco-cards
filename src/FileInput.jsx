@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 
-export function FileInput({ children, accept, onInput }) {
+export default function FileInput({ children, accept, onInput }) {
   const inputRef = useRef(null);
   return (
     <>
