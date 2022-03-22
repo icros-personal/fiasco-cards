@@ -1,5 +1,7 @@
+const DotenvWebpackPlugin = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+const { webpack } = require('webpack');
 
 module.exports = (env, argv) => ({
   mode: argv.mode === 'production' ? 'production' : 'development',
@@ -25,6 +27,7 @@ module.exports = (env, argv) => ({
     new HtmlWebpackPlugin({
       title: 'Fiasco Card Generator',
     }),
+    new DotenvWebpackPlugin(),
   ],
   output: {
     filename: 'main.js',

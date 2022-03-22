@@ -268,6 +268,11 @@ class MasterCreator {
     this.redraw();
   }
 
+  setCategoryColour(colour) {
+    this.categoryStyle.fillStyle = colour;
+    this.redraw();
+  }
+
   setCategoryFontSize(size) {
     this.categoryStyle.fontSize = size;
     this.redraw();
@@ -301,6 +306,11 @@ class MasterCreator {
     this.redraw();
   }
 
+  setTitleColour(colour) {
+    this.titleStyle.fillStyle = colour;
+    this.redraw();
+  }
+
   setTitleFontSize(size) {
     this.titleStyle.fontSize = size;
     this.redraw();
@@ -331,6 +341,11 @@ class MasterCreator {
 
   setDetailY(y) {
     this.detailStyle.y = y;
+    this.redraw();
+  }
+
+  setDetailColour(colour) {
+    this.detailStyle.fillStyle = colour;
     this.redraw();
   }
 

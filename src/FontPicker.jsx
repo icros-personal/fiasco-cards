@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FixedSizeList as List } from 'react-window';
 import styled from 'styled-components';
 
-const API_KEY = 'AIzaSyA6AL1ba0lqvMaqJSK4qg9mMvl350spN28';
+const API_KEY = process.env.GOOGLE_API_KEY;
 
 class FontManager {
   static initPromise;
@@ -93,7 +93,7 @@ export default function FontPicker({ name, onSelectFont }) {
         {expanded && (
           <>
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} onClick={() => setExpanded(false)} />
-            <List style={{ position: 'absolute', background: 'white', border: '1px solid black' }} height={150} itemCount={1 + FontManager.fontList.length} itemSize={35} width={300}>
+            <List style={{ position: 'absolute', background: 'white', border: '1px solid black' }} height={300} itemCount={1 + FontManager.fontList.length} itemSize={35} width={300}>
               {({ index, style }) => {
                 return <MountingFontRow onClick={() => {
                   if (index === 0) {

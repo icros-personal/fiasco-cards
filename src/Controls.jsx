@@ -2,8 +2,10 @@ import React, { useRef, useState } from 'react';
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
 
+import ColourInput from './ColourInput';
 import FileInput from './FileInput';
 import FontPicker from './FontPicker';
+import styled from 'styled-components';
 
 export const CARD_WIDTH = 512;
 export const CARD_HEIGHT = 375;
@@ -12,12 +14,15 @@ export default function Controls({ creator }) {
   const [margin, setMargin] = useState(creator.margin);
   const [categoryX, setCategoryX] = useState(creator.categoryStyle.x);
   const [categoryY, setCategoryY] = useState(creator.categoryStyle.y);
+  const [categoryColour, setCategoryColour] = useState(creator.categoryStyle.fillStyle);
   const [categoryFontSize, setCategoryFontSize] = useState(parseInt(creator.categoryStyle.fontSize));
   const [titleX, setTitleX] = useState(creator.titleStyle.x);
   const [titleY, setTitleY] = useState(creator.titleStyle.y);
+  const [titleColour, setTitleColour] = useState(creator.titleStyle.fillStyle);
   const [titleFontSize, setTitleFontSize] = useState(parseInt(creator.titleStyle.fontSize));
   const [detailX, setDetailX] = useState(creator.detailStyle.x);
   const [detailY, setDetailY] = useState(creator.detailStyle.y);
+  const [detailColour, setDetailColour] = useState(creator.detailStyle.fillStyle);
   const [detailFontSize, setDetailFontSize] = useState(parseInt(creator.detailStyle.fontSize));
 
   const [categoryFontName, setCategoryFontName] = useState('');
@@ -58,6 +63,12 @@ export default function Controls({ creator }) {
     creator.setCategoryY(value);
     setCategoryY(value);
   };
+
+  const onCategoryColourChange = (e) => {
+    const value = e.target.value;
+    creator.setCategoryColour(value);
+    setCategoryColour(value);
+  }
 
   const onCategoryFontSizeChange = (e) => {
     const value = Number(e.target.value);
@@ -100,6 +111,12 @@ export default function Controls({ creator }) {
     setTitleY(value);
   };
 
+  const onTitleColourChange = (e) => {
+    const value = e.target.value;
+    creator.setTitleColour(value);
+    setTitleColour(value);
+  }
+
   const onTitleFontSizeChange = (e) => {
     const value = Number(e.target.value);
     creator.setTitleFontSize(`${value}px`);
@@ -140,6 +157,12 @@ export default function Controls({ creator }) {
     creator.setDetailY(value);
     setDetailY(value);
   };
+
+  const onDetailColourChange = (e) => {
+    const value = e.target.value;
+    creator.setDetailColour(value);
+    setDetailColour(value);
+  }
 
   const onDetailFontSizeChange = (e) => {
     const value = Number(e.target.value);
@@ -214,6 +237,7 @@ export default function Controls({ creator }) {
         } else {
           creator.categoryStyle.fillStyle = 'black';
         }
+        setCategoryColour(settings.categoryStyle.fillStyle);
         creator.categoryStyle.font = 'serif';
         if (settings.categoryStyle.font === 'Category') {
           if (settings.categoryStyle.fontUrl) {
@@ -248,6 +272,7 @@ export default function Controls({ creator }) {
         } else {
           creator.titleStyle.fillStyle = 'black';
         }
+        setTitleColour(settings.titleStyle.fillStyle);
         creator.titleStyle.font = 'serif';
         if (settings.titleStyle.font === 'Title') {
           if (settings.titleStyle.fontUrl) {
@@ -282,6 +307,7 @@ export default function Controls({ creator }) {
         } else {
           creator.detailStyle.fillStyle = 'black';
         }
+        setDetailColour(settings.detailStyle.fillStyle);
         creator.detailStyle.font = 'serif';
         if (settings.detailStyle.font === 'Detail') {
           if (settings.detailStyle.fontUrl) {
@@ -376,7 +402,7 @@ export default function Controls({ creator }) {
   }
 
   return (
-    <div style={{ position: 'fixed', right: 0, top: 0, width: '30vw', height: '100vh' }}>
+    <div style={{ position: 'fixed', right: 0, top: 0, width: '240px', height: '100vh' }}>
       <span>Card size: {CARD_WIDTH} x {CARD_HEIGHT}</span><br />
       <label>
         <span>Background: </span>
@@ -385,39 +411,42 @@ export default function Controls({ creator }) {
       <br />
       <label>
         <span>Margin: </span>
-        <input type="number" value={margin} onChange={onMarginChange} />
+        <NumberInput type="number" value={margin} onChange={onMarginChange} />
       </label>
       <hr />
       <div>
         <span>Category Position</span><br />
-        <input type="number" value={categoryX} onChange={onCategoryXChange} />
-        <input type="number" value={categoryY} onChange={onCategoryYChange} />
+        <NumberInput type="number" value={categoryX} onChange={onCategoryXChange} />
+        <NumberInput type="number" value={categoryY} onChange={onCategoryYChange} />
+        <ColourInput value={categoryColour} onChange={onCategoryColourChange} />
       </div>
       <div>
         <span>Category Font</span><br />
-        <input type="number" value={categoryFontSize} onChange={onCategoryFontSizeChange} />
+        <NumberInput type="number" value={categoryFontSize} onChange={onCategoryFontSizeChange} />
         <FontPicker name={categoryFontName} onSelectFont={onCategoryFontChange}/>
       </div>
       <hr />
       <div>
         <span>Title Position</span><br />
-        <input type="number" value={titleX} onChange={onTitleXChange} />
-        <input type="number" value={titleY} onChange={onTitleYChange} />
+        <NumberInput type="number" value={titleX} onChange={onTitleXChange} />
+        <NumberInput type="number" value={titleY} onChange={onTitleYChange} />
+        <ColourInput value={titleColour} onChange={onTitleColourChange} />
       </div>
       <div>
         <span>Title Font</span><br />
-        <input type="number" value={titleFontSize} onChange={onTitleFontSizeChange} />
+        <NumberInput type="number" value={titleFontSize} onChange={onTitleFontSizeChange} />
         <FontPicker name={titleFontName} onSelectFont={onTitleFontChange}/>
       </div>
       <hr />
       <div>
         <span>Detail Position</span><br />
-        <input type="number" value={detailX} onChange={onDetailXChange} />
-        <input type="number" value={detailY} onChange={onDetailYChange} />
+        <NumberInput type="number" value={detailX} onChange={onDetailXChange} />
+        <NumberInput type="number" value={detailY} onChange={onDetailYChange} />
+        <ColourInput value={detailColour} onChange={onDetailColourChange} />
       </div>
       <div>
         <span>Detail Font</span><br />
-        <input type="number" value={detailFontSize} onChange={onDetailFontSizeChange} />
+        <NumberInput type="number" value={detailFontSize} onChange={onDetailFontSizeChange} />
         <FontPicker name={detailFontName} onSelectFont={onDetailFontChange}/>
       </div>
       <hr />
@@ -431,3 +460,8 @@ export default function Controls({ creator }) {
     </div>
   )
 }
+
+
+const NumberInput = styled.input`
+  width: 60px;
+`;
