@@ -54,10 +54,9 @@ class FontManager {
   }
 }
 
-export default function FontPicker({ onSelectFont }) {
+export default function FontPicker({ name, onSelectFont }) {
   const [fontListReady, setFontListReady] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const [label, setLabel] = useState('Select font');
   const fileInputRef = useRef(null);
   const lastFontRef = useRef(null);
 
@@ -76,10 +75,9 @@ export default function FontPicker({ onSelectFont }) {
       if (lastFontRef.current) {
         URL.revokeObjectURL(lastFontRef.current);
       }
-      setLabel(file.name);
       const fontUrl = URL.createObjectURL(file);
       lastFontRef.current = fontUrl;
-      onSelectFont(fontUrl);
+      onSelectFont(fontUrl, file.name);
     } catch (e) {
       console.error(e);
     }
@@ -91,7 +89,7 @@ export default function FontPicker({ onSelectFont }) {
     return (
       <div>
         <input style={{ display: 'none' }} ref={fileInputRef} type="file" accept=".ttf,.otf,.woff,.woff2,.eot" onInput={onSelectCustomFont} />
-        <button onClick={() => setExpanded(!expanded)}>{label}</button>
+        <button onClick={() => setExpanded(!expanded)}>{name || 'Select font'}</button>
         {expanded && (
           <>
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} onClick={() => setExpanded(false)} />
@@ -105,8 +103,7 @@ export default function FontPicker({ onSelectFont }) {
                       URL.revokeObjectURL(lastFontRef.current);
                     }
                     const chosen = FontManager.fontList[index - 1];
-                    setLabel(chosen.family);
-                    onSelectFont(chosen.files.regular.replace('http:', 'https:'));
+                    onSelectFont(chosen.files.regular.replace('http:', 'https:'), chosen.family);
                   }
                   setExpanded(false);
                 }} style={style}>{index > 0 ? FontManager.fontList[index - 1].family : 'Custom'}</MountingFontRow>
