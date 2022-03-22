@@ -19,6 +19,14 @@ class CardCreator {
     this.ctx = this.canvas.getContext('2d');
     this.container.appendChild(this.canvas);
 
+    this.marginViewer = document.createElement('div');
+    this.marginViewer.style.position = 'absolute';
+    this.marginViewer.style.width = `${CARD_WIDTH}px`;
+    this.marginViewer.style.height = `${CARD_HEIGHT}px`;
+    this.marginViewer.style.border = `${this.master.margin}px solid rgba(0, 255, 255, 0.5)`;
+    this.marginViewer.style.boxSizing = 'border-box';
+    this.container.appendChild(this.marginViewer);
+
     const div = document.createElement('div');
     div.style.display = 'flex';
     div.style.flexDirection = 'column';
@@ -70,6 +78,13 @@ class CardCreator {
     } else {
       this.ctx.fillStyle = 'red';
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    // Draw margin if needed
+    if (this.master.showMargin) {
+      this.marginViewer.style.border = `${this.master.margin}px solid rgba(0, 255, 255, 0.5)`;
+    } else {
+      this.marginViewer.style.border = 0;
     }
 
     // Draw category
@@ -195,6 +210,7 @@ class MasterCreator {
       x: 147,
       y: 263,
     };
+    this.showMargin = false;
     this.margin = 10;
     this.cards = [];
     for (let i = 0; i < 19; i++) {
@@ -255,6 +271,11 @@ class MasterCreator {
 
   setMargin(margin) {
     this.margin = margin;
+    this.redraw();
+  }
+
+  setShowMargin(show) {
+    this.showMargin = show;
     this.redraw();
   }
 

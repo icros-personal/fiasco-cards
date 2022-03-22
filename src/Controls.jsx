@@ -12,6 +12,7 @@ export const CARD_HEIGHT = 375;
 
 export default function Controls({ creator }) {
   const [margin, setMargin] = useState(creator.margin);
+  const [showMargin, setShowMargin] = useState(creator.showMargin);
   const [categoryX, setCategoryX] = useState(creator.categoryStyle.x);
   const [categoryY, setCategoryY] = useState(creator.categoryStyle.y);
   const [categoryColour, setCategoryColour] = useState(creator.categoryStyle.fillStyle);
@@ -50,6 +51,12 @@ export default function Controls({ creator }) {
     const value = Number(e.target.value);
     creator.setMargin(value);
     setMargin(value);
+  }
+
+  const onShowMarginChange = (e) => {
+    const value = Boolean(e.target.checked);
+    creator.setShowMargin(value);
+    setShowMargin(value);
   }
 
   const onCategoryXChange = (e) => {
@@ -412,6 +419,7 @@ export default function Controls({ creator }) {
       <label>
         <span>Margin: </span>
         <NumberInput type="number" value={margin} onChange={onMarginChange} />
+        <input type="checkbox" checked={showMargin} onChange={onShowMarginChange} />
       </label>
       <hr />
       <div>
